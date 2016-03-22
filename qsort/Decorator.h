@@ -1,4 +1,136 @@
 #include <memory>
+#include <iostream>
+using namespace std;
+
+namespace oreilly
+{
+	// beverage
+	class Beverage
+	{
+		string m_sdescription;
+	public:
+		virtual ~Beverage(){}
+		virtual string getDescription() = 0;
+		virtual int cost() = 0;
+	};
+
+	// decorator
+	class Decorator : public Beverage
+	{
+		Beverage *m_beverage;		
+	public:
+		Decorator(Beverage *beverage) : m_beverage(beverage)
+		{}
+		
+		int cost() 
+		{ 
+			return m_beverage->cost();	
+		}
+		
+		string getDescription()	
+		{ 
+			return m_beverage->getDescription();	
+		}
+
+	};
+
+	namespace coffe
+	{
+		//HouseBiend 
+		class HouseBiend : public Beverage
+		{			
+			int m_cost;
+			string m_description;
+		public:
+			HouseBiend() : m_cost(10)				
+			{
+				m_description = "HouseBiend";
+			}
+
+			int cost() 
+			{
+				return m_cost;	
+			}
+
+			string getDescription()
+			{
+				return m_description;
+			}
+		};
+
+		//Espresso
+		class Espresso : public Beverage
+		{			
+			string m_description;
+			int m_cost;
+		public:
+			Espresso() : m_cost(8)		
+			{
+				m_description = "Espresso";
+			}
+
+			int cost() 
+			{
+				return m_cost;	
+			}
+
+			string getDescription()
+			{
+				return m_description;
+			}
+		};
+	} // coffe
+
+	namespace added
+	{
+		// added milk
+		class Milk : public Decorator
+		{
+			int m_cost;
+			string m_descriptoin;
+			Beverage *m_beverage;
+		public:
+			Milk(Beverage *beverage) : m_beverage(beverage), m_cost(3), Decorator(beverage)
+			{
+				m_descriptoin = " with Milk";
+			}
+
+			int cost()
+			{
+				return m_beverage->cost() + m_cost;
+			}
+
+			string getDescription()
+			{
+				return m_beverage->getDescription() + m_descriptoin;
+			}
+		};
+
+		// added Mocha
+		class Mocha : public Decorator
+		{
+			Beverage *m_beverage;
+			string m_description;
+			int m_cost;
+		public:
+			Mocha(Beverage *beverage) : m_beverage(beverage), m_cost(8), Decorator(beverage)
+			{
+				m_description = " with mocha";
+			}
+
+			int cost()
+			{
+				return m_beverage->cost() + m_cost;
+			}
+
+			string getDescription()
+			{
+				return m_beverage->getDescription() + m_description;
+			}
+		};
+		
+	} // added 
+}
 
 namespace standart
 {
@@ -51,128 +183,3 @@ namespace standart
 		}
 	};
 } //namespace standart
-
-
-namespace book
-{
-	struct TextViewParam
-	{
-		int borderValue;
-		int scrollValue;
-		string someString;
-	};
-
-	class VisualComponent
-	{				
-	public:
-		//VisualComponent() : mParam(new TextViewParam) {}
-		virtual ~VisualComponent() {}
-		virtual string draw() = 0;
-		TextViewParam *mParam;
-	};
-
-
-	class Decorator : public VisualComponent
-	{
-		VisualComponent *m_component;
-		string mStrDecorator;
-	public:
-		string draw()
-		{			
-			mStrDecorator = "Decorator";			
-			return mStrDecorator;
-		}		
-	};
-
-	class ScrollDecorator : public Decorator
-	{
-		int m_scrollToValue;
-		string mStrScroll;
-		VisualComponent *m_component;
-	public:
-		ScrollDecorator(VisualComponent *component, int scrollToValue) :
-			m_component(component), m_scrollToValue(scrollToValue)
-		{
-			
-		}
-
-		string draw()
-		{						
-			mStrScroll = "Scroll";
-			mStrScroll += m_component->draw();
-			mParam->someString += mStrScroll;
-			return mStrScroll;
-		}
-
-		bool getScrollToValue(int &scrollValue)
-		{
-			scrollValue = m_scrollToValue;
-			return true;
-		}
-	};
-
-	class BorderDecorator : public Decorator
-	{
-		VisualComponent *m_component;
-		int m_borderSize;
-		string mStrBorderDecorator;
-	public: 
-		BorderDecorator(VisualComponent *component, int borderSize) : m_component(component),
-			m_borderSize(borderSize)
-		{
-			
-		}
-
-		string draw()
-		{			
-			mStrBorderDecorator = "Border";
-			mStrBorderDecorator += m_component->draw();
-			mParam->someString += mStrBorderDecorator;
-			return mStrBorderDecorator;
-		}
-
-		bool getBorderSize(int &borderSize)
-		{
-			borderSize = m_borderSize;
-			return true;
-		}
-	};
-
-
-	class Window
-	{
-		VisualComponent *m_component;
-		string s;
-	public:
-		void setContent(VisualComponent *component)
-		{
-			m_component = component;
-		}		
-
-		void draw()
-		{
-			if (m_component)
-			{
-				s = m_component->draw();
-			}
-		}
-	};
-
-
-	class TextView : public VisualComponent
-	{
-		string mStrTextView;
-	public:
-		TextView() 
-		{
-			
-		}
-
-		string draw()
-		{
-			
-			mStrTextView = "TextView";
-			return mStrTextView;
-		}
-	};
-}

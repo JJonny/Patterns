@@ -1,28 +1,32 @@
 #include <iostream>
+#include <string>
 using namespace std;
 #include "Decorator.h"
 
+void outResult(int cost, string description)
+{
+	cout << "Coffe: " << description << ", cost: " << cost << endl;
+}
+
 int main()
 {
-	
-	int f1 = 3, f2 = 2, f3 = 6;
-	//standart::Decorator2 d2(new standart::Decorator1(new standart::Component(f1), f2), f3);
-	//d2.cost();
-
-	
+	// oreilly book implementation
 	{
-		int borderSize = 30;
-		int scrollToValue = 5;
+		// only espresso
+		oreilly::Beverage *esp = new oreilly::coffe::Espresso();
+		outResult(esp->cost(), esp->getDescription());
 
-		book::Window *w = new book::Window;
-		book::TextView *tv = new book::TextView;		
+		// esspresso with double milk
+		oreilly::Beverage *esp2Milk = new oreilly::coffe::Espresso();
+		esp2Milk = new oreilly::added::Milk(esp2Milk);
+		esp2Milk = new oreilly::added::Milk(esp2Milk);
+		outResult(esp2Milk->cost(), esp2Milk->getDescription());
 
-		w->setContent(new book::BorderDecorator(new book::ScrollDecorator(tv, scrollToValue), borderSize));
-		w->draw();
-		int i = 0;
-
+		// HouseBiend
+		oreilly::Beverage *hbMocha = new oreilly::coffe::HouseBiend();
+		hbMocha = new oreilly::added::Mocha(hbMocha);
+		outResult(hbMocha->cost(), hbMocha->getDescription());
 	}
-	
 
 	return 0;
 }
