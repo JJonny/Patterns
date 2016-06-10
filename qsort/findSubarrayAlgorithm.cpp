@@ -3,6 +3,7 @@
 
 using namespace std;
 
+// useless commit 1
 
 namespace find_subarray
 {
