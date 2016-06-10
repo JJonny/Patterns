@@ -4,6 +4,7 @@
 using namespace std;
 
 // useless commit 1
+// useless commit 2
 
 namespace find_subarray
 {
